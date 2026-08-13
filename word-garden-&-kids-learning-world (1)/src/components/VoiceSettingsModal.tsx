@@ -15,21 +15,11 @@ export interface VoiceOption {
 
 export const ELEVEN_LABS_VOICES: VoiceOption[] = [
   {
-    id: 'jsCqWAovK2LW0byjtLZt',
-    name: 'Gigi',
-    gender: 'female',
-    tag: 'Gigi the Super Star ⭐⭐⭐ (DEFAULT)',
-    description: 'THE MOST LIVELY & ENERGETIC voice! Super upbeat, playful, bubbly - perfect for making learning FUN!',
-    avatar: '🌟',
-    color: 'from-yellow-400 via-pink-500 to-purple-600',
-    sampleText: "Hello friend! I'm Gigi! Let's have an AMAZING adventure in Word Garden! This is going to be SO much fun!"
-  },
-  {
     id: 'EXAVITQu4vr4xnSDxMaL',
     name: 'Bella',
     gender: 'female',
-    tag: 'Teacher Bella 🦋',
-    description: 'Energetic, playful, cheerful storyteller with bright tone',
+    tag: 'Teacher Bella ⭐ (DEFAULT)',
+    description: 'Energetic, playful, cheerful storyteller with bright tone - verified working with ElevenLabs!',
     avatar: '🦋',
     color: 'from-purple-500 to-pink-500',
     sampleText: "Once upon a time in Word Garden, magic happened! Let's learn and have fun together!"

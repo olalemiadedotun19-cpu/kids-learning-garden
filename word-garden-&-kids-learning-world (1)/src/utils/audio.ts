@@ -294,7 +294,7 @@ export async function speakText(
     return;
   }
 
-  const voiceId = options?.voiceId || (typeof localStorage !== 'undefined' && localStorage.getItem('elevenlabs_voice_id')) || 'jsCqWAovK2LW0byjtLZt';
+  const voiceId = options?.voiceId || (typeof localStorage !== 'undefined' && localStorage.getItem('elevenlabs_voice_id')) || 'EXAVITQu4vr4xnSDxMaL';
   const cacheKey = `${cleanedText.toLowerCase()}_${(voiceId || voice).toLowerCase()}`;
 
   // 1. Check client-side audio cache first for instant (<5ms) playback

@@ -16,6 +16,7 @@ import { MayaAskModal } from './components/MayaAskModal';
 import { VoiceSettingsModal } from './components/VoiceSettingsModal';
 import { StartScreen } from './components/StartScreen';
 import { AdventureIntroScreen } from './components/AdventureIntroScreen';
+import { HomeScreen } from './components/HomeScreen';
 import { KidsLoadingScreen } from './components/KidsLoadingScreen';
 import { playSound } from './utils/audio';
 
@@ -25,7 +26,7 @@ export default function App() {
   const [isAskMayaOpen, setIsAskMayaOpen] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [selectedVoiceId, setSelectedVoiceId] = useState<string>(() => {
-    return localStorage.getItem('elevenlabs_voice_id') || 'jsCqWAovK2LW0byjtLZt';
+    return localStorage.getItem('elevenlabs_voice_id') || 'EXAVITQu4vr4xnSDxMaL';
   });
 
   const handleSelectVoiceId = (id: string) => {
@@ -45,6 +46,13 @@ export default function App() {
     const savedName = localStorage.getItem('playerName');
     const hasSeenIntro = localStorage.getItem('hasSeenAdventureIntro');
     return savedName && !hasSeenIntro ? true : false;
+  });
+
+  const [showHomeScreen, setShowHomeScreen] = useState(() => {
+    // Show home screen if player has seen adventure intro (returning player)
+    const savedName = localStorage.getItem('playerName');
+    const hasSeenIntro = localStorage.getItem('hasSeenAdventureIntro');
+    return (savedName && hasSeenIntro) ? true : false;
   });
 
   const [skipLoadingOnStart] = useState(() => {
@@ -95,17 +103,17 @@ export default function App() {
     // Mark adventure intro as seen
     localStorage.setItem('hasSeenAdventureIntro', 'true');
     setShowAdventureIntro(false);
-    // No loading screen - go straight to app after adventure intro
-    setIsLoading(false);
+    // Show home screen after adventure intro
+    setShowHomeScreen(true);
   };
 
-  // For returning players on page reload - skip all splash screens and go straight to app
+  // For returning players on page reload - skip all splash screens and go straight to home screen
   React.useEffect(() => {
     if (skipLoadingOnStart && !showStartScreen && !showAdventureIntro && isLoading) {
-      // Returning player with all conditions met - show app immediately, no loading
+      // Returning player with all conditions met - show home screen immediately, no loading
       setIsLoading(false);
     }
-  }, [skipLoadingOnStart, showStartScreen, showAdventureIntro, isLoading]);
+  }, [skipLoadingOnStart, showStartScreen, showAdventureIntro, showHomeScreen, isLoading]);
 
   const handleSelectTab = (tab: NavTab) => {
     if (tab === activeTab) return;
@@ -213,6 +221,32 @@ export default function App() {
         />
       )}
 
+      {/* 1.75. HOME SCREEN FOR RETURNING PLAYERS */}
+      {showHomeScreen && (
+        <HomeScreen
+          playerName={stats.playerName}
+          playerAvatar={stats.playerAvatar}
+          stars={stats.stars}
+          gems={stats.gems}
+          onSelectTab={(tab) => {
+            setShowHomeScreen(false);
+            handleSelectTab(tab);
+          }}
+          onOpenRoom={() => {
+            setShowHomeScreen(false);
+            setIsRoomOpen(true);
+          }}
+          onOpenVoiceSettings={() => {
+            setShowHomeScreen(false);
+            setIsVoiceModalOpen(true);
+          }}
+          onOpenAskMaya={() => {
+            setShowHomeScreen(false);
+            setIsAskMayaOpen(true);
+          }}
+        />
+      )}
+
       {/* 2. KIDS FUN LOADING OVERLAY */}
       {isLoading && (
         <KidsLoadingScreen
@@ -245,6 +279,7 @@ export default function App() {
       </div>
 
       {/* Main Container */}
+      {!showHomeScreen && (
       <div className="relative z-10 flex-1 flex flex-col w-full max-w-7xl mx-auto p-1 sm:p-2 md:p-3 overflow-hidden min-h-0">
         {/* Top Navigation Header */}
         <Header
@@ -278,6 +313,7 @@ export default function App() {
           </div>
         </main>
       </div>
+      )}
 
       {/* Modals */}
       <MyRoomModal
