@@ -33,7 +33,7 @@ export const AdventureIntroScreen: React.FC<AdventureIntroScreenProps> = ({
         playSound('fanfare');
         setShowConfetti(true);
         speakText(
-          `Welcome, ${playerName}! You're about to embark on an amazing learning adventure in Word Garden!`,
+          `Welcome, ${playerName}! You're about to embark on an amazing learning adventure with me, Gigi! I'm SO excited to help you learn and have FUN!`,
           () => {
             setTimeout(() => setStage('journey'), 1000);
           }
@@ -47,7 +47,7 @@ export const AdventureIntroScreen: React.FC<AdventureIntroScreenProps> = ({
       const timer = setTimeout(() => {
         playSound('star');
         speakText(
-          `You'll explore magical places, collect stars and gems, solve fun word puzzles, and learn amazing things with me, Teacher Bella!`,
+          `You'll explore magical places, collect stars and gems, solve fun word puzzles, and learn amazing things! I'm Gigi, and I promise you - this is going to be AWESOME!`,
           () => {
             setTimeout(() => setStage('ready'), 1500);
           }
@@ -59,7 +59,7 @@ export const AdventureIntroScreen: React.FC<AdventureIntroScreenProps> = ({
 
   const handleStartAdventure = () => {
     playSound('fanfare');
-    speakText(`Let's go, ${playerName}! Adventure awaits!`, () => {
+    speakText(`Let's GO, ${playerName}! The Word Garden is waiting for you! Gigi is ready to make this AMAZING!`, () => {
       onComplete();
     });
     setTimeout(() => onComplete(), 2000);
@@ -97,12 +97,12 @@ export const AdventureIntroScreen: React.FC<AdventureIntroScreenProps> = ({
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center gap-8 max-w-2xl text-center">
         
-        {/* Teacher Avatar */}
+        {/* Gigi Avatar */}
         <div className="relative animate-bounce">
           <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full p-2 bg-gradient-to-tr from-yellow-300 via-amber-300 to-yellow-400 shadow-2xl border-4 border-white flex items-center justify-center overflow-hidden">
             <img
               src={GUIDE_AVATAR_IMG}
-              alt="Teacher Bella"
+              alt="Gigi - Your Super Lively Guide"
               className="w-full h-full object-cover rounded-full"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';
@@ -116,11 +116,11 @@ export const AdventureIntroScreen: React.FC<AdventureIntroScreenProps> = ({
 
         {/* Welcome Title */}
         <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-6 py-4 border-4 border-amber-300 shadow-2xl">
-          <h1 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 mb-2">
+          <h1 className="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-pink-600 to-purple-600 mb-2">
             Welcome, {playerName}! 🎉
           </h1>
           <p className="text-purple-800 font-bold text-lg sm:text-xl">
-            You're ready for an epic learning adventure!
+            I'm <span className="text-pink-600 font-extrabold">Gigi</span>, your super lively guide! Let's make learning FUN! 🌟
           </p>
         </div>
 

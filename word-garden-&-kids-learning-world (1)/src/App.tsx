@@ -25,7 +25,7 @@ export default function App() {
   const [isAskMayaOpen, setIsAskMayaOpen] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [selectedVoiceId, setSelectedVoiceId] = useState<string>(() => {
-    return localStorage.getItem('elevenlabs_voice_id') || 'EXAVITQu4vr4xnSDxMaL';
+    return localStorage.getItem('elevenlabs_voice_id') || 'jsCqWAovK2LW0byjtLZt';
   });
 
   const handleSelectVoiceId = (id: string) => {
@@ -45,6 +45,12 @@ export default function App() {
     const savedName = localStorage.getItem('playerName');
     const hasSeenIntro = localStorage.getItem('hasSeenAdventureIntro');
     return savedName && !hasSeenIntro ? true : false;
+  });
+
+  const [skipLoadingOnStart] = useState(() => {
+    // If returning player (saved name exists), skip loading screen on first load
+    const savedName = localStorage.getItem('playerName');
+    return !!savedName;
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -89,9 +95,17 @@ export default function App() {
     // Mark adventure intro as seen
     localStorage.setItem('hasSeenAdventureIntro', 'true');
     setShowAdventureIntro(false);
-    setLoadingMessage('Loading Word Garden...');
-    setIsLoading(true);
+    // No loading screen - go straight to app after adventure intro
+    setIsLoading(false);
   };
+
+  // For returning players on page reload - skip all splash screens and go straight to app
+  React.useEffect(() => {
+    if (skipLoadingOnStart && !showStartScreen && !showAdventureIntro && isLoading) {
+      // Returning player with all conditions met - show app immediately, no loading
+      setIsLoading(false);
+    }
+  }, [skipLoadingOnStart, showStartScreen, showAdventureIntro, isLoading]);
 
   const handleSelectTab = (tab: NavTab) => {
     if (tab === activeTab) return;
