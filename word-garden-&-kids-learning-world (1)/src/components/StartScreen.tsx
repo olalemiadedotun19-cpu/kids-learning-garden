@@ -28,11 +28,11 @@ export const StartScreen: React.FC<StartScreenProps> = ({
   const [name, setName] = useState(initialName || '');
   const [showWelcome, setShowWelcome] = useState(true);
 
-  // Play Bella's welcoming greeting voice on first mount
+  // Play Gigi's welcoming greeting voice on first mount
   useEffect(() => {
     const timer = setTimeout(() => {
       if (showWelcome) {
-        speakText("Hello! I'm Teacher Bella, your guide in Word Garden! Welcome! What is your name?");
+        speakText("Hello! I'm Gigi! I'm SO excited to meet you! Welcome to Word Garden! What is your name?");
       }
     }, 800);
     return () => clearTimeout(timer);
@@ -40,7 +40,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
 
   const handlePlayVoiceIntro = () => {
     playSound('pop');
-    speakText(`Hi ${name || 'explorer'}! I'm Bella! Let's learn together in Word Garden!`);
+    speakText(`Hi ${name || 'explorer'}! I'm Gigi! Let's have an AMAZING time together in Word Garden! This is going to be SO FUN!`);
   };
 
   const handleStartGame = () => {
@@ -57,7 +57,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
     localStorage.setItem('playerName', finalName);
     localStorage.setItem('playerAvatar', initialAvatar || 'bunny');
     
-    speakText(`Wonderful, ${finalName}! Let's start our adventure in the Word Garden! Let's go!`, () => {
+    speakText(`Wonderful, ${finalName}! Let's start our adventure in the Word Garden! Gigi is SO ready!`, () => {
       onStart(finalName, initialAvatar || 'bunny');
     });
     // Instant trigger if audio takes time
@@ -95,7 +95,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
           <button 
             onClick={handlePlayVoiceIntro}
             className="relative group focus:outline-none transition-transform hover:scale-110 active:scale-95"
-            title="Click to hear Bella greet you!"
+            title="Click to hear Gigi's super lively voice!"
           >
             {/* Glowing avatar ring */}
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-purple-400 via-pink-400 to-purple-500 shadow-2xl border-4 border-white flex items-center justify-center overflow-hidden">
@@ -123,10 +123,10 @@ export const StartScreen: React.FC<StartScreenProps> = ({
           {/* Welcome Speech Bubble */}
           <div className="mt-4 bg-white border-3 border-purple-300 rounded-3xl px-5 py-3 shadow-lg max-w-sm">
             <p className="text-purple-900 font-black text-sm sm:text-base leading-snug">
-              "Hi! I'm <span className="text-pink-600 font-extrabold text-lg">Teacher Bella</span>! 👋"
+              "Hi! I'm <span className="text-yellow-500 font-extrabold text-lg">Gigi</span>! 👋"
             </p>
             <p className="text-indigo-800 font-bold text-xs sm:text-sm mt-2">
-              Welcome to Word Garden! What's your name?
+              Super excited to learn with you! What's your name?
             </p>
           </div>
         </div>

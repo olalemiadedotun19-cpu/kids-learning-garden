@@ -294,7 +294,7 @@ export async function speakText(
     return;
   }
 
-  const voiceId = options?.voiceId || (typeof localStorage !== 'undefined' && localStorage.getItem('elevenlabs_voice_id')) || 'EXAVITQu4vr4xnSDxMaL';
+  const voiceId = options?.voiceId || (typeof localStorage !== 'undefined' && localStorage.getItem('elevenlabs_voice_id')) || 'jsCqWAovK2LW0byjtLZt';
   const cacheKey = `${cleanedText.toLowerCase()}_${(voiceId || voice).toLowerCase()}`;
 
   // 1. Check client-side audio cache first for instant (<5ms) playback
@@ -321,7 +321,7 @@ export async function speakText(
     }
   }
 
-  // 2. Fetch AI TTS from server (/api/tts) - PRIMARY METHOD
+  // 2. Fetch AI TTS from server (/api/tts)
   try {
     const res = await fetch('/api/tts', {
       method: 'POST',
@@ -355,65 +355,58 @@ export async function speakText(
         return;
       }
     }
-    console.warn(`Server TTS API responded but no audio data. Status: ${res.status}`);
   } catch (err) {
-    console.warn("Server TTS API unavailable, attempting direct ElevenLabs...");
+    console.warn("Server TTS API unavailable, checking direct Netlify static fallback...");
   }
 
-  // 3. Direct ElevenLabs API Call (FALLBACK when server is unavailable)
-  try {
-    const elevenApiKey = (import.meta as any).env?.VITE_ELEVENLABS_API_KEY;
-    if (!elevenApiKey) {
-      console.warn("No ElevenLabs API key configured in environment");
-      throw new Error("Missing VITE_ELEVENLABS_API_KEY");
-    }
-
-    const elevenRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-      method: "POST",
-      headers: {
-        "Accept": "audio/mpeg",
-        "Content-Type": "application/json",
-        "xi-api-key": elevenApiKey,
-      },
-      body: JSON.stringify({
-        text: cleanedText,
-        model_id: "eleven_multilingual_v2",
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.75,
-          style: 0.4,
+  // 3. Netlify Static Host Direct ElevenLabs Fallback (When deployed statically without server.ts backend)
+  const elevenApiKey = (import.meta as any).env?.VITE_ELEVENLABS_API_KEY || "sk_f392d9bd28c3d9136b45ffa04d172a3d1d5bf8f28a855a9b";
+  if (elevenApiKey && elevenApiKey.trim() !== '') {
+    try {
+      const elevenRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+        method: "POST",
+        headers: {
+          "Accept": "audio/mpeg",
+          "Content-Type": "application/json",
+          "xi-api-key": elevenApiKey,
         },
-      }),
-    });
+        body: JSON.stringify({
+          text: cleanedText,
+          model_id: "eleven_multilingual_v2",
+          voice_settings: {
+            stability: 0.5,
+            similarity_boost: 0.75,
+            style: 0.4,
+          },
+        }),
+      });
 
-    if (elevenRes.ok) {
-      const blob = await elevenRes.blob();
-      const audioUrl = URL.createObjectURL(blob);
-      clientAudioCache.set(cacheKey, audioUrl);
+      if (elevenRes.ok) {
+        const blob = await elevenRes.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        clientAudioCache.set(cacheKey, audioUrl);
 
-      const audio = new Audio(audioUrl);
-      currentAiAudio = audio;
+        const audio = new Audio(audioUrl);
+        currentAiAudio = audio;
 
-      audio.onended = () => {
-        if (currentAiAudio === audio) currentAiAudio = null;
-        if (onEnd) onEnd();
-      };
-      audio.onerror = () => {
-        if (currentAiAudio === audio) currentAiAudio = null;
-        fallbackSpeech(cleanedText, onEnd, options?.rate || 1.0);
-      };
+        audio.onended = () => {
+          if (currentAiAudio === audio) currentAiAudio = null;
+          if (onEnd) onEnd();
+        };
+        audio.onerror = () => {
+          if (currentAiAudio === audio) currentAiAudio = null;
+          fallbackSpeech(cleanedText, onEnd, options?.rate || 1.0);
+        };
 
-      await audio.play();
-      return;
-    } else {
-      console.warn(`ElevenLabs API error: ${elevenRes.status}`, await elevenRes.text());
+        await audio.play();
+        return;
+      }
+    } catch (clientElevenErr) {
+      console.warn("Netlify ElevenLabs direct call notice:", clientElevenErr);
     }
-  } catch (clientElevenErr) {
-    console.warn("Direct ElevenLabs call unavailable:", clientElevenErr);
   }
 
   // 4. Fallback to browser speech synthesis if all APIs are unreachable
-  console.warn("All TTS APIs unavailable, using browser speech synthesis as fallback");
   fallbackSpeech(cleanedText, onEnd, options?.rate || 1.0);
 }
 
