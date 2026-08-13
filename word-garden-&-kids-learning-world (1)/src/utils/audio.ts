@@ -321,7 +321,7 @@ export async function speakText(
     }
   }
 
-  // 2. Fetch AI TTS from server (/api/tts)
+  // 2. Fetch AI TTS from server (/api/tts) - PRIMARY METHOD
   try {
     const res = await fetch('/api/tts', {
       method: 'POST',
@@ -355,60 +355,65 @@ export async function speakText(
         return;
       }
     }
+    console.warn(`Server TTS API responded but no audio data. Status: ${res.status}`);
   } catch (err) {
-    console.warn("Server TTS API unavailable, checking direct Netlify static fallback...");
+    console.warn("Server TTS API unavailable, attempting direct ElevenLabs...");
   }
 
-  // 3. Netlify Static Host Direct ElevenLabs Fallback (When deployed statically without server.ts backend)
-  const elevenApiKey = (import.meta as any).env?.VITE_ELEVENLABS_API_KEY;
-  if (elevenApiKey && elevenApiKey.trim() !== '') {
-    try {
-      const elevenRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-        method: "POST",
-        headers: {
-          "Accept": "audio/mpeg",
-          "Content-Type": "application/json",
-          "xi-api-key": elevenApiKey,
-        },
-        body: JSON.stringify({
-          text: cleanedText,
-          model_id: "eleven_multilingual_v2",
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.75,
-            style: 0.4,
-          },
-        }),
-      });
-
-      if (elevenRes.ok) {
-        const blob = await elevenRes.blob();
-        const audioUrl = URL.createObjectURL(blob);
-        clientAudioCache.set(cacheKey, audioUrl);
-
-        const audio = new Audio(audioUrl);
-        currentAiAudio = audio;
-
-        audio.onended = () => {
-          if (currentAiAudio === audio) currentAiAudio = null;
-          if (onEnd) onEnd();
-        };
-        audio.onerror = () => {
-          if (currentAiAudio === audio) currentAiAudio = null;
-          fallbackSpeech(cleanedText, onEnd, options?.rate || 1.0);
-        };
-
-        await audio.play();
-        return;
-      } else {
-        console.warn("ElevenLabs API returned error, falling back to browser speech");
-      }
-    } catch (clientElevenErr) {
-      console.warn("ElevenLabs direct call failed, falling back to browser speech:", clientElevenErr);
+  // 3. Direct ElevenLabs API Call (FALLBACK when server is unavailable)
+  try {
+    const elevenApiKey = (import.meta as any).env?.VITE_ELEVENLABS_API_KEY;
+    if (!elevenApiKey) {
+      console.warn("No ElevenLabs API key configured in environment");
+      throw new Error("Missing VITE_ELEVENLABS_API_KEY");
     }
+
+    const elevenRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      method: "POST",
+      headers: {
+        "Accept": "audio/mpeg",
+        "Content-Type": "application/json",
+        "xi-api-key": elevenApiKey,
+      },
+      body: JSON.stringify({
+        text: cleanedText,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.75,
+          style: 0.4,
+        },
+      }),
+    });
+
+    if (elevenRes.ok) {
+      const blob = await elevenRes.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      clientAudioCache.set(cacheKey, audioUrl);
+
+      const audio = new Audio(audioUrl);
+      currentAiAudio = audio;
+
+      audio.onended = () => {
+        if (currentAiAudio === audio) currentAiAudio = null;
+        if (onEnd) onEnd();
+      };
+      audio.onerror = () => {
+        if (currentAiAudio === audio) currentAiAudio = null;
+        fallbackSpeech(cleanedText, onEnd, options?.rate || 1.0);
+      };
+
+      await audio.play();
+      return;
+    } else {
+      console.warn(`ElevenLabs API error: ${elevenRes.status}`, await elevenRes.text());
+    }
+  } catch (clientElevenErr) {
+    console.warn("Direct ElevenLabs call unavailable:", clientElevenErr);
   }
 
   // 4. Fallback to browser speech synthesis if all APIs are unreachable
+  console.warn("All TTS APIs unavailable, using browser speech synthesis as fallback");
   fallbackSpeech(cleanedText, onEnd, options?.rate || 1.0);
 }
 
