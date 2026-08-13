@@ -360,7 +360,7 @@ export async function speakText(
   }
 
   // 3. Netlify Static Host Direct ElevenLabs Fallback (When deployed statically without server.ts backend)
-  const elevenApiKey = (import.meta as any).env?.VITE_ELEVENLABS_API_KEY || "sk_f392d9bd28c3d9136b45ffa04d172a3d1d5bf8f28a855a9b";
+  const elevenApiKey = (import.meta as any).env?.VITE_ELEVENLABS_API_KEY;
   if (elevenApiKey && elevenApiKey.trim() !== '') {
     try {
       const elevenRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
@@ -400,9 +400,11 @@ export async function speakText(
 
         await audio.play();
         return;
+      } else {
+        console.warn("ElevenLabs API returned error, falling back to browser speech");
       }
     } catch (clientElevenErr) {
-      console.warn("Netlify ElevenLabs direct call notice:", clientElevenErr);
+      console.warn("ElevenLabs direct call failed, falling back to browser speech:", clientElevenErr);
     }
   }
 
