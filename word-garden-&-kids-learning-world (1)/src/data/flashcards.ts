@@ -1,9 +1,12 @@
 import { Flashcard, Story, ShopItem } from '../types';
+import guideAvatar from '../assets/images/guide_avatar_1786586645342.jpg';
+import wordApple from '../assets/images/word_apple_1786586656297.jpg';
+import bunnyBuddy from '../assets/images/bunny_buddy_1786586673129.jpg';
 
-// Custom generated image references
-export const GUIDE_AVATAR_IMG = '/src/assets/images/guide_avatar_1786586645342.jpg';
-export const WORD_APPLE_IMG = '/src/assets/images/word_apple_1786586656297.jpg';
-export const BUNNY_BUDDY_IMG = '/src/assets/images/bunny_buddy_1786586673129.jpg';
+// Custom generated image references bundled via Vite ESM imports
+export const GUIDE_AVATAR_IMG = guideAvatar;
+export const WORD_APPLE_IMG = wordApple;
+export const BUNNY_BUDDY_IMG = bunnyBuddy;
 
 export const FLASHCARDS: Flashcard[] = [
   {
@@ -235,7 +238,7 @@ export const FLASHCARDS: Flashcard[] = [
     letter: 'Z',
     word: 'Zebra',
     phonics: 'Zuh, zuh, Zebra!',
-    image: 'https://images.unsplash.com/photo-1501705388883-4ed8a543392c?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1526095179574-86e5458425de?auto=format&fit=crop&w=600&q=80',
     color: 'from-slate-800 to-zinc-900',
     exampleSentence: 'The zebra has beautiful black and white stripes!',
     category: 'Animals'

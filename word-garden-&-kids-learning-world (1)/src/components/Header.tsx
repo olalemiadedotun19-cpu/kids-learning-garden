@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, Sparkles, HelpCircle, Star, Gem, Home, Trophy, Smile, Sparkle } from 'lucide-react';
+import { Volume2, Sparkles, HelpCircle, Star, Gem, Home, Trophy, Smile, Sparkle, Mic } from 'lucide-react';
 import { GUIDE_AVATAR_IMG } from '../data/flashcards';
 import { speakText, playSound } from '../utils/audio';
 
@@ -10,6 +10,7 @@ interface HeaderProps {
   playerAvatar?: string;
   onOpenRoom: () => void;
   onOpenAskMaya: () => void;
+  onOpenVoiceSettings?: () => void;
   onOpenStartScreen?: () => void;
   activeTabTitle?: string;
 }
@@ -21,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   playerAvatar = '🐰',
   onOpenRoom,
   onOpenAskMaya,
+  onOpenVoiceSettings,
   onOpenStartScreen,
   activeTabTitle = 'Word Garden'
 }) => {
@@ -49,6 +51,9 @@ export const Header: React.FC<HeaderProps> = ({
               alt="Maya Guide"
               className="w-full h-full object-cover rounded-full"
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';
+              }}
             />
           </div>
           <div className="absolute -bottom-0.5 -right-0.5 bg-purple-600 text-white rounded-full p-0.5 sm:p-1 shadow border border-white text-[10px] sm:text-xs flex items-center justify-center animate-bounce">
@@ -130,6 +135,21 @@ export const Header: React.FC<HeaderProps> = ({
             {gems}
           </span>
         </div>
+
+        {/* Voice Selector Settings Button */}
+        {onOpenVoiceSettings && (
+          <button
+            onClick={() => {
+              playSound('pop');
+              onOpenVoiceSettings();
+            }}
+            className="flex items-center gap-1 px-2.5 py-1 bg-gradient-to-b from-indigo-500 via-purple-600 to-indigo-700 hover:from-indigo-400 hover:to-purple-500 active:scale-95 text-white font-extrabold text-xs sm:text-sm rounded-xl sm:rounded-2xl border-2 border-purple-300 shadow-md transition-all group"
+            title="Choose Voice Settings"
+          >
+            <Mic className="w-3.5 h-3.5 text-amber-300 group-hover:scale-110 transition-transform" />
+            <span className="hidden xs:inline font-sans drop-shadow-sm">Voice</span>
+          </button>
+        )}
 
         {/* My Room Button */}
         <button

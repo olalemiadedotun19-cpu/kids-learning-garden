@@ -13,6 +13,7 @@ import { ArtCorner } from './components/ArtCorner';
 import { MusicRoom } from './components/MusicRoom';
 import { MyRoomModal } from './components/MyRoomModal';
 import { MayaAskModal } from './components/MayaAskModal';
+import { VoiceSettingsModal } from './components/VoiceSettingsModal';
 import { StartScreen } from './components/StartScreen';
 import { KidsLoadingScreen } from './components/KidsLoadingScreen';
 import { playSound } from './utils/audio';
@@ -21,6 +22,15 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('word-garden');
   const [isRoomOpen, setIsRoomOpen] = useState(false);
   const [isAskMayaOpen, setIsAskMayaOpen] = useState(false);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [selectedVoiceId, setSelectedVoiceId] = useState<string>(() => {
+    return localStorage.getItem('elevenlabs_voice_id') || '21m00Tcm4TlvDq8ikWAM';
+  });
+
+  const handleSelectVoiceId = (id: string) => {
+    setSelectedVoiceId(id);
+    localStorage.setItem('elevenlabs_voice_id', id);
+  };
 
   // Kids experience flow states
   const [showStartScreen, setShowStartScreen] = useState(true);
@@ -191,6 +201,7 @@ export default function App() {
           playerAvatar={stats.playerAvatar}
           onOpenRoom={() => setIsRoomOpen(true)}
           onOpenAskMaya={() => setIsAskMayaOpen(true)}
+          onOpenVoiceSettings={() => setIsVoiceModalOpen(true)}
           onOpenStartScreen={() => setShowStartScreen(true)}
           activeTabTitle={getTabTitle(activeTab)}
         />
@@ -228,6 +239,13 @@ export default function App() {
         isOpen={isAskMayaOpen}
         onClose={() => setIsAskMayaOpen(false)}
         currentTopic={getTabTitle(activeTab)}
+      />
+
+      <VoiceSettingsModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        selectedVoiceId={selectedVoiceId}
+        onSelectVoice={handleSelectVoiceId}
       />
     </div>
   );

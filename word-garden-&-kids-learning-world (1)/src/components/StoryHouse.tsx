@@ -77,6 +77,9 @@ export const StoryHouse: React.FC<StoryHouseProps> = ({ onEarnReward }) => {
               alt={currentStory.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600&auto=format&fit=crop&q=80';
+              }}
             />
             <div className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black px-4 py-1.5 rounded-full text-xs sm:text-sm shadow-md border border-white">
               Page {pageIndex + 1} of {currentStory.pages.length}

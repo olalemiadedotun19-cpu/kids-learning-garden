@@ -183,6 +183,9 @@ export const WordGarden: React.FC<WordGardenProps> = ({ onEarnReward }) => {
               alt={currentCard.word}
               className="w-full h-full object-cover rounded-lg sm:rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md"
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600&auto=format&fit=crop&q=80';
+              }}
             />
           </div>
         </div>
