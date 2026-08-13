@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavTab } from '../types';
 import { speakText, playSound } from '../utils/audio';
-import { 
-  Settings,
-  Door,
-  HelpCircle,
-  Home
-} from 'lucide-react';
 
 interface HomeScreenProps {
   playerName: string;
@@ -110,7 +104,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* Main Content: Learning Areas Grid */}
           <div className="mb-6">
             <h2 className="text-2xl sm:text-3xl font-black text-center text-purple-900 mb-4 flex items-center justify-center gap-2">
-              <Home className="w-8 h-8" />
+              🏠
               Explore Learning Areas
             </h2>
             
@@ -143,7 +137,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* Secondary Actions */}
           <div className="mb-6">
             <h2 className="text-xl sm:text-2xl font-black text-center text-purple-900 mb-3 flex items-center justify-center gap-2">
-              <Settings className="w-6 h-6" />
+              ⚙️
               Quick Settings
             </h2>
             
@@ -155,7 +149,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 hover:translate-x-full transition-transform duration-700" />
                 <div className="relative z-10 text-center">
-                  <Door className="w-8 h-8 text-white drop-shadow-lg mx-auto mb-1" />
+                  <div className="text-5xl mb-2 inline-block">🚪</div>
                   <p className="font-black text-white drop-shadow-lg text-sm">My Room 🏠</p>
                   <p className="text-xs text-white/90 font-bold">Shop & Decorate</p>
                 </div>
@@ -168,7 +162,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 hover:translate-x-full transition-transform duration-700" />
                 <div className="relative z-10 text-center">
-                  <Settings className="w-8 h-8 text-white drop-shadow-lg mx-auto mb-1" />
+                  <div className="text-5xl mb-2 inline-block">🎤</div>
                   <p className="font-black text-white drop-shadow-lg text-sm">Voice Settings 🎤</p>
                   <p className="text-xs text-white/90 font-bold">Choose Teacher</p>
                 </div>
@@ -181,7 +175,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 hover:translate-x-full transition-transform duration-700" />
                 <div className="relative z-10 text-center">
-                  <HelpCircle className="w-8 h-8 text-white drop-shadow-lg mx-auto mb-1" />
+                  <div className="text-5xl mb-2 inline-block">❓</div>
                   <p className="font-black text-white drop-shadow-lg text-sm">Ask Maya 🤔</p>
                   <p className="text-xs text-white/90 font-bold">Get Help</p>
                 </div>
