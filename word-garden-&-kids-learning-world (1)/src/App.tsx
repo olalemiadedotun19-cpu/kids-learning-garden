@@ -15,6 +15,7 @@ import { MyRoomModal } from './components/MyRoomModal';
 import { MayaAskModal } from './components/MayaAskModal';
 import { VoiceSettingsModal } from './components/VoiceSettingsModal';
 import { StartScreen } from './components/StartScreen';
+import { AdventureIntroScreen } from './components/AdventureIntroScreen';
 import { KidsLoadingScreen } from './components/KidsLoadingScreen';
 import { playSound } from './utils/audio';
 
@@ -24,7 +25,7 @@ export default function App() {
   const [isAskMayaOpen, setIsAskMayaOpen] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [selectedVoiceId, setSelectedVoiceId] = useState<string>(() => {
-    return localStorage.getItem('elevenlabs_voice_id') || '21m00Tcm4TlvDq8ikWAM';
+    return localStorage.getItem('elevenlabs_voice_id') || 'EXAVITQu4vr4xnSDxMaL';
   });
 
   const handleSelectVoiceId = (id: string) => {
@@ -32,33 +33,63 @@ export default function App() {
     localStorage.setItem('elevenlabs_voice_id', id);
   };
 
-  // Kids experience flow states
-  const [showStartScreen, setShowStartScreen] = useState(true);
+  // Kids experience flow states - with localStorage persistence
+  const [showStartScreen, setShowStartScreen] = useState(() => {
+    // Check if player name already exists in localStorage
+    const savedName = localStorage.getItem('playerName');
+    return !savedName; // Show start screen only if no saved name
+  });
+
+  const [showAdventureIntro, setShowAdventureIntro] = useState(() => {
+    // Show adventure intro if player name exists but hasn't seen intro yet
+    const savedName = localStorage.getItem('playerName');
+    const hasSeenIntro = localStorage.getItem('hasSeenAdventureIntro');
+    return savedName && !hasSeenIntro ? true : false;
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('Getting your fun garden ready...');
 
-  const [stats, setStats] = useState<UserStats>({
-    playerName: 'Explorer',
-    playerAvatar: '🐰',
-    stars: 125,
-    gems: 30,
-    completedCards: ['A', 'B'],
-    unlockedItems: [],
-    equippedHat: '',
-    equippedSticker: '',
-    roomBg: 'garden',
-    dailyBonusClaimed: false,
-    soundEnabled: true,
+  const [stats, setStats] = useState<UserStats>(() => {
+    // Load from localStorage if available
+    const savedName = localStorage.getItem('playerName');
+    const savedAvatar = localStorage.getItem('playerAvatar');
+    
+    return {
+      playerName: savedName || 'Explorer',
+      playerAvatar: savedAvatar || '🐰',
+      stars: 125,
+      gems: 30,
+      completedCards: ['A', 'B'],
+      unlockedItems: [],
+      equippedHat: '',
+      equippedSticker: '',
+      roomBg: 'garden',
+      dailyBonusClaimed: false,
+      soundEnabled: true,
+    };
   });
 
   const handleStartFromScreen = (name: string, avatar: string) => {
+    // Save to localStorage
+    localStorage.setItem('playerName', name);
+    localStorage.setItem('playerAvatar', avatar);
+    
     setStats((prev) => ({
       ...prev,
       playerName: name,
       playerAvatar: avatar,
     }));
     setShowStartScreen(false);
-    setLoadingMessage(`Welcome ${name}! Preparing the Word Garden...`);
+    // Show adventure intro screen after name entry
+    setShowAdventureIntro(true);
+  };
+
+  const handleAdventureIntroComplete = () => {
+    // Mark adventure intro as seen
+    localStorage.setItem('hasSeenAdventureIntro', 'true');
+    setShowAdventureIntro(false);
+    setLoadingMessage('Loading Word Garden...');
     setIsLoading(true);
   };
 
@@ -157,6 +188,14 @@ export default function App() {
           onStart={handleStartFromScreen}
           stars={stats.stars}
           gems={stats.gems}
+        />
+      )}
+
+      {/* 1.5. ADVENTURE INTRO SPLASH SCREEN */}
+      {showAdventureIntro && (
+        <AdventureIntroScreen
+          playerName={stats.playerName}
+          onComplete={handleAdventureIntroComplete}
         />
       )}
 

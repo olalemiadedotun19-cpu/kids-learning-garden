@@ -15,54 +15,24 @@ export interface VoiceOption {
 
 export const ELEVEN_LABS_VOICES: VoiceOption[] = [
   {
-    id: '21m00Tcm4TlvDq8ikWAM',
-    name: 'Rachel',
+    id: 'EXAVITQu4vr4xnSDxMaL',
+    name: 'Bella',
     gender: 'female',
-    tag: 'Teacher Maya Choice ⭐',
-    description: 'Warm, clear, encouraging female teacher voice',
-    avatar: '🌸',
-    color: 'from-pink-500 to-rose-600',
-    sampleText: "Hello! I'm Teacher Rachel! Let's learn words together!"
+    tag: 'Teacher Bella ⭐ (Default)',
+    description: 'Energetic, playful, cheerful storyteller with bright tone - perfect for kids!',
+    avatar: '🦋',
+    color: 'from-purple-500 to-pink-500',
+    sampleText: "Once upon a time in Word Garden, magic happened! Let's learn and have fun together!"
   },
   {
     id: 'JBFqnCBsd6RMkjVDRZzb',
     name: 'George',
     gender: 'male',
     tag: 'Friendly Guide 🙋‍♂️',
-    description: 'Gentle, clear, enthusiastic male mentor voice',
+    description: 'Gentle, clear, enthusiastic male mentor voice with warm personality',
     avatar: '🎩',
     color: 'from-blue-500 to-indigo-600',
     sampleText: "Welcome explorer! I'm George! Ready for a fun adventure?"
-  },
-  {
-    id: 'EXAVITQu4vr4xnSDxMaL',
-    name: 'Bella',
-    gender: 'female',
-    tag: 'Storyteller 🎀',
-    description: 'Playful, cheerful storyteller with bright tone',
-    avatar: '🦋',
-    color: 'from-purple-500 to-pink-500',
-    sampleText: "Once upon a time in Word Garden, magic happened!"
-  },
-  {
-    id: 'AZnzlk1XvdvUeBnXmlld',
-    name: 'Domi',
-    gender: 'female',
-    tag: 'Phonics Specialist 💎',
-    description: 'High clarity articulation for learning ABC phonics',
-    avatar: '🌼',
-    color: 'from-emerald-500 to-teal-600',
-    sampleText: "A is for Apple! Ah, ah, Apple!"
-  },
-  {
-    id: 'zrHiDhphv9ZnVXBqCLjz',
-    name: 'Mimi',
-    gender: 'female',
-    tag: 'Sweet Buddy 🦊',
-    description: 'Sweet, enthusiastic voice for young toddlers',
-    avatar: '🐥',
-    color: 'from-amber-400 to-orange-500',
-    sampleText: "Hooray! You did a fantastic job learning today!"
   }
 ];
 
