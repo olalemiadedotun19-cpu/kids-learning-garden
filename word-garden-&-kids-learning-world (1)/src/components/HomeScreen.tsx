@@ -2,12 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { NavTab } from '../types';
 import { speakText, playSound } from '../utils/audio';
 import { 
-  BookOpen, 
-  MessageCircle, 
-  Palette, 
-  Music, 
-  Brain, 
-  Radio,
   Settings,
   Door,
   HelpCircle,
